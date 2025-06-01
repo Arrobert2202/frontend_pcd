@@ -25,20 +25,14 @@ const mockReservations = [
 ];
 
 export default function PlaceManagerPage() {
-  // Place details
   const [place, setPlace] = useState(mockPlace);
   const [editPlace, setEditPlace] = useState(false);
   const [placeForm, setPlaceForm] = useState(place);
-
-  // Menu
   const [menu, setMenu] = useState(mockMenu);
   const [openMenuDialog, setOpenMenuDialog] = useState(false);
   const [menuForm, setMenuForm] = useState({ id: null, name: '', price: '' });
-
-  // Reservations
   const [reservations, setReservations] = useState(mockReservations);
 
-  // Edit place details
   const handleEditPlace = () => {
     setPlaceForm(place);
     setEditPlace(true);
@@ -48,7 +42,6 @@ export default function PlaceManagerPage() {
     setEditPlace(false);
   };
 
-  // Menu actions
   const handleMenuDialogOpen = (item = { id: null, name: '', price: '' }) => {
     setMenuForm(item);
     setOpenMenuDialog(true);
@@ -66,7 +59,6 @@ export default function PlaceManagerPage() {
     setMenu(menu.filter(m => m.id !== id));
   };
 
-  // Reservation actions
   const handleReservationStatus = (id, status) => {
     setReservations(reservations.map(r => r.id === id ? { ...r, status } : r));
   };
@@ -74,8 +66,6 @@ export default function PlaceManagerPage() {
   return (
     <Container maxWidth="md" sx={{ mt: 5 }}>
       <Typography variant="h4" gutterBottom>Manage Venue</Typography>
-
-      {/* Place details */}
       <Box sx={{ mb: 4, p: 2, border: '1px solid #eee', borderRadius: 2 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           <Box
@@ -107,7 +97,6 @@ export default function PlaceManagerPage() {
         </DialogActions>
       </Dialog>
 
-      {/* Menu management */}
       <Box sx={{ mb: 4, p: 2, border: '1px solid #eee', borderRadius: 2 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
           <Typography variant="h6">Menu</Typography>
@@ -139,7 +128,6 @@ export default function PlaceManagerPage() {
         </DialogActions>
       </Dialog>
 
-      {/* Reservations management */}
       <Box sx={{ mb: 4, p: 2, border: '1px solid #eee', borderRadius: 2 }}>
         <Typography variant="h6" sx={{ mb: 1 }}>Pending Reservations</Typography>
         <List>
@@ -162,7 +150,6 @@ export default function PlaceManagerPage() {
         </List>
       </Box>
 
-      {/* Reservation history */}
       <Box sx={{ mb: 4, p: 2, border: '1px solid #eee', borderRadius: 2 }}>
         <Typography variant="h6" sx={{ mb: 1 }}>Reservation History</Typography>
         <List>
