@@ -39,6 +39,15 @@ export default function HomePage() {
   return (
     <>
       <Header />
+      <Box sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end', mt: 2, pr: 3 }}>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => router.push('/create-form')}
+        >
+          Request new restaurant
+        </Button>
+      </Box>
       <Container maxWidth="sm" sx={{ textAlign: 'center', marginTop: '100px' }}>
         {!isLoggedIn ? (
           <>

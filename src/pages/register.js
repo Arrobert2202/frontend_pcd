@@ -1,6 +1,7 @@
 import { Box, Button, Container, TextField, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import Link from 'next/link';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -159,6 +160,11 @@ export default function RegisterPage() {
           >
             Register
           </Button>
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+            <Link href="/login" passHref legacyBehavior>
+              <Button variant="text" color="primary">Already have an account? Login</Button>
+            </Link>
+          </Box>
         </form>
       </Container>
     </Box>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Typography, Box, TextField, Button, Avatar, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { Container, Typography, Box, TextField, Button, Avatar, Dialog, DialogTitle, DialogContent, DialogActions, List, ListItem, ListItemText } from '@mui/material';
 import Header from '../components/Header';
 import useAuth from '../hooks/useAuth';
 import { useRouter } from 'next/router';
@@ -18,12 +18,13 @@ export default function ProfilePage() {
   const [password, setPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [managerRestaurants, setManagerRestaurants] = useState([]);
 
   useEffect(() => {
     if (!loading && isLoggedIn === false) {
       router.push('/login');
     }
-  }, [isLoggedIn, router]);
+  }, [isLoggedIn, router, loading]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -39,6 +40,16 @@ export default function ProfilePage() {
         setPhone(data.phone || '');
         setProfilePic(data.profile_picture || '');
       });
+  }, []);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    fetch('http://localhost:3000/manager/restaurants', {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then(res => res.json())
+      .then(data => setManagerRestaurants(data || []));
   }, []);
 
   const handleProfilePicChange = (e) => {
@@ -213,6 +224,25 @@ export default function ProfilePage() {
           <Typography color={message.includes('fail') ? 'error' : 'success.main'} sx={{ mt: 3, textAlign: 'center' }}>
             {message}
           </Typography>
+        )}
+        {managerRestaurants.length > 0 && (
+          <Box sx={{ mt: 4 }}>
+            <Typography variant="h6" gutterBottom>
+              Restaurants you manage:
+            </Typography>
+            <List>
+              {managerRestaurants.map(r => (
+                <ListItem
+                  key={r.id}
+                  button
+                  onClick={() => router.push(`/place-manager?id=${r.id}`)}
+                  sx={{ cursor: 'pointer' }}
+                >
+                  <ListItemText primary={r.name} secondary={r.address} />
+                </ListItem>
+              ))}
+            </List>
+          </Box>
         )}
       </Container>
     </>

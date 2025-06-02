@@ -1,11 +1,13 @@
 import { Box, Button, Container, TextField, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import Link from 'next/link';
 
 export default function LoginPage() {
   const router = useRouter();
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
+  const [openPasswordModal, setOpenPasswordModal] = useState(false);
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -31,9 +33,11 @@ export default function LoginPage() {
       console.log('Login successful, token:', data.token);
       localStorage.setItem('token', data.token);
       console.log('Saved token:', localStorage.getItem('token'));
-      setTimeout(() => {
+      if (data.isAdmin) {
+        router.push('/admin');
+      } else {
         router.push('/home');
-      }, 100);
+      }
     } catch (err) {
       console.error('JWT decode error:', err);
       setError('Login failed');
@@ -88,6 +92,11 @@ export default function LoginPage() {
           >
             Login
           </Button>
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+            <Link href="/register" passHref legacyBehavior>
+              <Button variant="text" color="primary">Create account</Button>
+            </Link>
+          </Box>
         </form>
       </Container>
     </Box>
