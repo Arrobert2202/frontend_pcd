@@ -162,6 +162,9 @@ export default function HomePage() {
             ))}
           </>
         )}
+        <li>
+          Get started by editing <code>src/pages/home.js</code>.
+        </li>
       </Container>
     </>
   );
