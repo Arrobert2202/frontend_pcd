@@ -55,22 +55,53 @@ export default function PlacePage() {
     );
   };
 
-  const handleSubmit = () => {
-    let msg = '';
-    if (action === 'reservation') {
-      msg = `Reservation for ${name} on ${date} for ${people} people.`;
+  const handleSubmit = async () => {
+    const token = localStorage.getItem('token');
+    
+    if (action === 'reservation' || action === 'reservation_preorder') {
+      try {
+        const [reservationDate, reservationTime] = date.split('T');
+        
+        const reservationData = {
+          restaurant_id: id,
+          reservation_date: reservationDate,
+          reservation_time: reservationTime,
+          nr_of_people: people,
+          additional_comment: action === 'reservation_preorder' 
+            ? `Pre-ordered items: ${menu.filter(m => orderItems.includes(m.id)).map(m => m.name).join(', ')}`
+            : ''
+        };
+
+        const response = await fetch(`${getBackendUrl()}/reservation`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(reservationData)
+        });
+
+        if (!response.ok) {
+          throw new Error('Reservation failed');
+        }
+
+        const result = await response.json();
+        alert(`Reservation successful! Status: ${result.status}`);
+        
+        setOpen(false);
+        setName('');
+        setDate('');
+        setPeople(1);
+        setOrderItems([]);
+        setAction('reservation');
+        
+      } catch (error) {
+        alert('Failed to make reservation: ' + error.message);
+        return;
+      }
     } else if (action === 'pickup') {
-      msg = `Pickup order for ${name} on ${date}. Items: ${menu.filter(m => orderItems.includes(m.id)).map(m => m.name).join(', ')}`;
-    } else if (action === 'reservation_preorder') {
-      msg = `Reservation for ${name} on ${date} for ${people} people.\nPre-ordered: ${menu.filter(m => orderItems.includes(m.id)).map(m => m.name).join(', ')}`;
+      alert('Pickup order functionality will be implemented soon');
     }
-    alert(msg);
-    setOpen(false);
-    setName('');
-    setDate('');
-    setPeople(1);
-    setOrderItems([]);
-    setAction('reservation');
   };
 
   if (loading) return <div>Loading...</div>;
@@ -98,6 +129,19 @@ export default function PlacePage() {
             <Typography variant="caption">{place.rating || '-'}/5</Typography>
           </Box>
         </Box>
+
+        {/* Admin-only button
+        { (
+          <Box sx={{ textAlign: 'center', mb: 3 }}>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => router.push(`/restaurantReservations?restaurant_id=${id}`)}
+            >
+              View Reservations
+            </Button>
+          </Box>
+        )} */}
 
         <Typography variant="h6" gutterBottom>
           Menu
