@@ -3,6 +3,7 @@ import { Container, Typography, Box, TextField, Button, Avatar, Dialog, DialogTi
 import Header from '../components/Header';
 import useAuth from '../hooks/useAuth';
 import { useRouter } from 'next/router';
+import { getBackendUrl } from '../utils/api';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -29,7 +30,7 @@ export default function ProfilePage() {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) return;
-    fetch('http://localhost:3000/user/me', {
+    fetch(`${getBackendUrl()}/user/me`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.json())
@@ -45,7 +46,7 @@ export default function ProfilePage() {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) return;
-    fetch('http://localhost:3000/manager/restaurants', {
+    fetch(`${getBackendUrl()}/manager/restaurants`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.json())
@@ -67,7 +68,7 @@ export default function ProfilePage() {
     setMessage('');
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('http://localhost:3000/user/update', {
+      const res = await fetch(`${getBackendUrl()}/user/update`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -99,7 +100,7 @@ export default function ProfilePage() {
       return;
     }
     try {
-      const res = await fetch('http://localhost:3000/change-password', {
+      const res = await fetch(`${getBackendUrl()}/change-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

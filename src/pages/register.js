@@ -2,6 +2,7 @@ import { Box, Button, Container, TextField, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import Link from 'next/link';
+import { getBackendUrl } from '../utils/api';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -38,7 +39,7 @@ export default function RegisterPage() {
       return;
     }
     try {
-      const res = await fetch('http://localhost:3000/register', {
+      const res = await fetch(`${getBackendUrl()}/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

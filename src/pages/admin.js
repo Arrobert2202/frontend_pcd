@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Container, Typography, Box, Button, TextField, Dialog, DialogTitle, DialogContent, DialogActions, List, ListItem, ListItemText, Select, MenuItem } from '@mui/material';
 import Header from '../components/Header';
+import { getBackendUrl } from '../utils/api';
 
 export default function AdminPage() {
   const [requests, setRequests] = useState([]);
@@ -14,7 +15,7 @@ export default function AdminPage() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    fetch('http://localhost:3000/restaurant-requests', {
+    fetch(`${getBackendUrl()}/restaurant-requests`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.json())
@@ -27,7 +28,7 @@ export default function AdminPage() {
         }
       });
 
-    fetch('http://localhost:3000/restaurant', {
+    fetch(`${getBackendUrl()}/restaurant`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.json())
@@ -42,7 +43,7 @@ export default function AdminPage() {
 
   const handleApprove = async (id) => {
     const token = localStorage.getItem('token');
-    const res = await fetch(`http://localhost:3000/restaurant-requests/${id}/approve`, {
+    const res = await fetch(`${getBackendUrl()}/restaurant-requests/${id}/approve`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}` }
     });
@@ -53,7 +54,7 @@ export default function AdminPage() {
 
   const handleReject = async (id) => {
     const token = localStorage.getItem('token');
-    const res = await fetch(`http://localhost:3000/restaurant-requests/${id}/reject`, {
+    const res = await fetch(`${getBackendUrl()}/restaurant-requests/${id}/reject`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}` }
     });
@@ -68,7 +69,7 @@ export default function AdminPage() {
     setError('');
     const token = localStorage.getItem('token');
 
-    const usersRes = await fetch('http://localhost:3000/users', {
+    const usersRes = await fetch(`${getBackendUrl()}/users`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     const users = await usersRes.json();
@@ -80,7 +81,7 @@ export default function AdminPage() {
       return;
     }
 
-    const res = await fetch('http://localhost:3000/restaurant/manager', {
+    const res = await fetch(`${getBackendUrl()}/restaurant/manager`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       body: JSON.stringify({
@@ -103,7 +104,7 @@ export default function AdminPage() {
 
   const handleDeleteRestaurant = async (id) => {
     const token = localStorage.getItem('token');
-    const res = await fetch(`http://localhost:3000/restaurant/${id}`, {
+    const res = await fetch(`${getBackendUrl()}/restaurant/${id}`, {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${token}` }
     });
@@ -120,7 +121,7 @@ export default function AdminPage() {
   const handleConfirmDelete = async () => {
     if (!restaurantToDelete) return;
     const token = localStorage.getItem('token');
-    const res = await fetch(`http://localhost:3000/restaurant/${restaurantToDelete}`, {
+    const res = await fetch(`${getBackendUrl()}/restaurant/${restaurantToDelete}`, {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${token}` }
     });

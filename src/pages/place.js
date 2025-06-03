@@ -6,6 +6,7 @@ import {
 } from '@mui/material';
 import useAuth from '../hooks/useAuth';
 import Header from '../components/Header';
+import { getBackendUrl } from '../utils/api';
 
 export default function PlacePage() {
   const router = useRouter();
@@ -31,7 +32,7 @@ export default function PlacePage() {
   useEffect(() => {
     if (loading || !isLoggedIn || !id) return;
     const token = localStorage.getItem('token');
-    fetch('http://localhost:3000/restaurant', {
+    fetch(`${getBackendUrl()}/restaurant`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.json())
@@ -39,7 +40,7 @@ export default function PlacePage() {
         const found = restaurants.find(r => r.id === id);
         setPlace(found || null);
       });
-    fetch(`http://localhost:3000/restaurant/${id}/menu`, {
+    fetch(`${getBackendUrl()}/restaurant/${id}/menu`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.json())

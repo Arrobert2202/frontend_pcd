@@ -7,6 +7,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Header from '../components/Header';
 import { useRouter } from 'next/router';
+import { getBackendUrl } from '../utils/api';
 
 export default function PlaceManagerPage() {
   const router = useRouter();
@@ -24,14 +25,14 @@ export default function PlaceManagerPage() {
   useEffect(() => {
     if (!id) return;
     const token = localStorage.getItem('token');
-    fetch(`http://localhost:3000/restaurant/${id}`, { headers: { Authorization: `Bearer ${token}` } })
+    fetch(`${getBackendUrl()}/restaurant/${id}`, { headers: { Authorization: `Bearer ${token}` } })
       .then(res => res.json()).then(data => {
         setPlace(data);
         setPlaceForm(data);
       });
-    fetch(`http://localhost:3000/restaurant/${id}/menu`, { headers: { Authorization: `Bearer ${token}` } })
+    fetch(`${getBackendUrl()}/restaurant/${id}/menu`, { headers: { Authorization: `Bearer ${token}` } })
       .then(res => res.json()).then(setMenu);
-    fetch(`http://localhost:3000/restaurant/${id}/reservations`, { headers: { Authorization: `Bearer ${token}` } })
+    fetch(`${getBackendUrl()}/restaurant/${id}/reservations`, { headers: { Authorization: `Bearer ${token}` } })
       .then(res => res.json()).then(setReservations);
   }, [id]);
 
@@ -43,7 +44,7 @@ export default function PlaceManagerPage() {
     setError('');
     setMessage('');
     const token = localStorage.getItem('token');
-    const res = await fetch(`http://localhost:3000/restaurant/${id}`, {
+    const res = await fetch(`${getBackendUrl()}/restaurant/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -69,21 +70,21 @@ export default function PlaceManagerPage() {
     setMessage('');
     const token = localStorage.getItem('token');
     if (menuForm.id) {
-      const res = await fetch(`http://localhost:3000/menu/${menuForm.id}`, {
+      const res = await fetch(`${getBackendUrl()}/menu/${menuForm.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify(menuForm)
       });
       if (!res.ok) setError('Could not update menu item.');
     } else {
-      const res = await fetch(`http://localhost:3000/restaurant/${id}/menu`, {
+      const res = await fetch(`${getBackendUrl()}/restaurant/${id}/menu`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify(menuForm)
       });
       if (!res.ok) setError('Could not add menu item.');
     }
-    fetch(`http://localhost:3000/restaurant/${id}/menu`, { headers: { Authorization: `Bearer ${token}` } })
+    fetch(`${getBackendUrl()}/restaurant/${id}/menu`, { headers: { Authorization: `Bearer ${token}` } })
       .then(res => res.json()).then(setMenu);
     setOpenMenuDialog(false);
     setMenuForm({ id: null, name: '', price: '' });
@@ -92,12 +93,12 @@ export default function PlaceManagerPage() {
     setError('');
     setMessage('');
     const token = localStorage.getItem('token');
-    const res = await fetch(`http://localhost:3000/menu/${menuId}`, {
+    const res = await fetch(`${getBackendUrl()}/menu/${menuId}`, {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${token}` }
     });
     if (!res.ok) setError('Could not delete menu item.');
-    fetch(`http://localhost:3000/restaurant/${id}/menu`, { headers: { Authorization: `Bearer ${token}` } })
+    fetch(`${getBackendUrl()}/restaurant/${id}/menu`, { headers: { Authorization: `Bearer ${token}` } })
       .then(res => res.json()).then(setMenu);
   };
 
@@ -105,12 +106,12 @@ export default function PlaceManagerPage() {
     setError('');
     setMessage('');
     const token = localStorage.getItem('token');
-    await fetch(`http://localhost:3000/reservation/${resId}/status`, {
+    await fetch(`${getBackendUrl()}/reservation/${resId}/status`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       body: JSON.stringify({ status })
     });
-    fetch(`http://localhost:3000/restaurant/${id}/reservations`, { headers: { Authorization: `Bearer ${token}` } })
+    fetch(`${getBackendUrl()}/restaurant/${id}/reservations`, { headers: { Authorization: `Bearer ${token}` } })
       .then(res => res.json()).then(setReservations);
   };
 

@@ -3,6 +3,7 @@ import { Container, Typography, Box, TextField, Button, Alert, MenuItem, Select,
 import useAuth from '../hooks/useAuth';
 import Header from '../components/Header';
 import { useRouter } from 'next/router';
+import { getBackendUrl } from '../utils/api';
 
 export default function CreateRestaurantForm() {
   const { isLoggedIn, loading } = useAuth();
@@ -34,7 +35,7 @@ export default function CreateRestaurantForm() {
       return;
     }
     try {
-      const res = await fetch('http://localhost:3000/restaurant-request', {
+      const res = await fetch(`${getBackendUrl()}/restaurant-request`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

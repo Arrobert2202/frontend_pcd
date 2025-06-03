@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { jwtDecode } from 'jwt-decode';
 import useAuth from '../hooks/useAuth';
 import Header from '../components/Header';
+import { getBackendUrl } from '../utils/api';
 
 export default function HomePage() {
   const router = useRouter();
@@ -22,7 +23,7 @@ export default function HomePage() {
   useEffect(() => {
     if (loading || !isLoggedIn) return;
     const token = localStorage.getItem('token');
-    fetch('http://localhost:3000/restaurant', {
+    fetch(`${getBackendUrl()}/restaurant`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.json())
